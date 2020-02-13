@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("kafka")
-public class KafkaController {
+public class KafkaPostController {
     private final String TOPIC = "post.topic";
 
     @Autowired

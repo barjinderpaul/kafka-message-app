@@ -1,6 +1,7 @@
 package com.message.kafka.config;
 
 import com.message.kafka.model.Post;
+import com.message.kafka.model.User;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -55,6 +56,26 @@ public class ConsumerConfiguration {
     public ConcurrentKafkaListenerContainerFactory<String, Post> postConcurrentKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String,Post> cKCF = new ConcurrentKafkaListenerContainerFactory<>();
         cKCF.setConsumerFactory(postConsumerFactory());
+        return cKCF;
+    }
+
+    @Bean
+    public ConsumerFactory<String, User> userConsumerFactory() {
+        Map<String,Object> config = new HashMap<>();
+
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,"127.0.0.1:9092");
+        config.put(ConsumerConfig.GROUP_ID_CONFIG,"post-group");
+        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+
+        return new DefaultKafkaConsumerFactory<>(config,new StringDeserializer(), new JsonDeserializer<>(User.class));
+
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, User> userConcurrentKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String,User> cKCF = new ConcurrentKafkaListenerContainerFactory<>();
+        cKCF.setConsumerFactory(userConsumerFactory());
         return cKCF;
     }
 
